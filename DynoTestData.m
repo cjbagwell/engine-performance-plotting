@@ -10,6 +10,21 @@ classdef DynoTestData
         data
     end
     
+    methods (Access = private)
+        function validateKey(obj, key)
+           %validateKey Validates that a key exists
+           % This method validates the key parameter to ensure that it
+           % exists.  If not this method throws a noSuchKey exception.
+            if ~isKey(obj.data, key)
+                possibleKeys = obj.data.keys();
+                em = sprintf("The key %s was not found.  Possible key choices are:\n", key);
+                em2 = sprintf("'%s', ",possibleKeys{:});
+                ME = MException('MyComponent:noSuchKey', strcat(em, em2));
+                throw(ME)
+            end 
+        end
+    end
+    
     methods
         function obj = DynoTestData(fileName)
             %DynoTestData Construct an instance of DynoTestData
@@ -47,19 +62,19 @@ classdef DynoTestData
             %   data.  For example, to have a time series plot of engine 
             %   speed during the test you would use 
             %   "obj.plotSingleTimeseries('engine speed')"
-            if ~isKey(obj.data, key)
-                possibleKeys = obj.data.keys();
-                em = sprintf("The key %s was not found.  Possible key choices are:\n", key);
-                em2 = sprintf("'%s', ",possibleKeys{:});
-                ME = MException('MyComponent:noSuchKey', strcat(em, em2));
-                throw(ME)
-            end
+            obj.validateKey(key);
             plot(obj.data('time'), obj.data(key))
             xlim([0, max(obj.data('time'))])
             xlabel(obj.labels('time'))
             ylabel(obj.labels(key))
             title(strcat(key,' vs time'))
         end
+        
+%         function plotMultipleTimeseries(obj, keys)
+%            for i = 1:length(keys)
+%                fprintf("%s\n", string(keys(i)));
+%            end
+%         end
     end
 end
 
