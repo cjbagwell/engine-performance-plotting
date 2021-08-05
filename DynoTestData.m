@@ -67,7 +67,7 @@ classdef DynoTestData
             plot(obj.data('time'), obj.data(key))
             xlim([0, max(obj.data('time'))])
             xlabel(obj.labels('time'))
-            ylabel(obj.labels(key))
+            ylabel(obj.labels(key), 'Interpreter', 'None')
             title(strcat(key,' vs time'))
         end
         
